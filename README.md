@@ -19,10 +19,10 @@
 
 ## Установка и настройка
 
-**Скачайте репозиторий**
+**Скачайте репозиторий и установите зависимости**
 ```shell script
-$ git clone xxx #Clone rep
-$ cd xxx
+$ git clone https://github.com/n30np14gu3/my-diary.git
+$ cd my-diary
 $ composer install
 ```
 **Настройе .env файл**
