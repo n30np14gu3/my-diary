@@ -20,6 +20,8 @@ Route::get('logout', ['uses' => 'Auth@logout']);
 
 Route::group(['middleware' => 'diary_auth'], function (){
     Route::get('diary', ['uses' => 'DiaryController@index']);
+    Route::get('settings', ['uses' => 'AccountController@index']);
+    Route::post('change_password', ['uses' => 'AccountController@change_password']);
     Route::post('compose', ['uses' => 'DiaryController@compose']);
     Route::post('edit', ['uses' => 'DiaryController@edit']);
     Route::post('delete', ['uses' => 'DiaryController@delete']);

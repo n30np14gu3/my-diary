@@ -31,6 +31,7 @@
     <a class="@yield('welcome-active') item" href="/">Home</a>
     @if(@$logged)
         <a class="@yield('diary-active') item" href="{{url('/diary')}}">Diary</a>
+        <a class="@yield('settings-active') item" href="{{url('/settings')}}">Settings</a>
     @endif
     <a class="@yield('faq-active') item" href="{{url('/faq')}}">F.A.Q</a>
     <a class="@yield('support-active') item" onclick="showPopup('info', 'Support is temporary unavailable')">Support</a>

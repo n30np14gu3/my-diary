@@ -66,3 +66,21 @@ $('#edit-form').submit(function (e) {
         }
     });
 });
+
+$('#change_password_form').submit(function (e) {
+    e.preventDefault();
+    $.ajax({
+        url: '/change_password',
+        method: 'POST',
+        data: $('#change_password_form').serialize(),
+        success: function (data) {
+            if(data.status !== 'OK'){
+                showPopup('error', data.message);
+            }
+            else{
+                showPopup('success', 'Password successfully changed!');
+                $('#change_password_form')[0].reset();
+            }
+        }
+    });
+});
