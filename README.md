@@ -14,12 +14,30 @@
 * Tokenizer PHP Extension
 * XML PHP Extension
 * Curl PHP Extension
+* PHP MySQL Extension 
 
 **Доп ПО**
 * Composer
 * MySql >= 5.5
 
 ## Установка и настройка
+
+**Установите веб сервер, PHP и дополнения**
+```shell script
+apt-get install composer
+apt-get install php7.4 php7.4-curl php7.4-bcmath php7.4-ctype php7.4-json php7.4-fileinfo php7.4-mbstring php7.4-pdo php7.4-tokenizer php7.4-xml php7.4-fpm php-mysql
+```
+
+**Настройте MySQL**
+Важно, чтобы авторизацияп ользователя была по ```mysql_native_password```
+```mysql
+-- UPDATE FOR ROOT USER
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+FLUSH PRIVILEGES;
+
+-- CREATE DATABASE
+CREATE DATABASE diary;
+```
 
 **Скачайте репозиторий и установите зависимости**
 ```shell script
@@ -34,7 +52,6 @@ touch .env
 ```dotenv
 APP_NAME=diary
 APP_ENV=production
-APP_KEY=base64:NX+GBNrf/crsg3zvmURKpGx2Lc9Uk+yF54vA60bc29w=
 APP_DEBUG=false
 APP_URL=http://localhost
 
@@ -55,19 +72,29 @@ SESSION_LIFETIME=120
 
 SEC_GENERATOR_SALT="myPaGgtrOiE0g19NXKZIb1Qkk9Tc9Yvq"
 SEC_DEBUG=true #disable on prod!!! (не менять)
-
 ```
+
+**Создайте ключ приложения**
+
+```shell script
+php artisan key:generate 
+```
+
 **Создайте JSON файл для инициализации**
+
 ```shell script
 $ touch storage/init.json
 ```
+
+Заполните json нужными данными
+
 ```json
 {
-    "username": "zer0_hacker",
-    "password": "'VwE<)5.]tn)4{{P",
+    "username": "flag_user",
+    "password": "user_password",
     "note": {
-        "title": "My Secret Note",
-        "body": "sb{99edc5de3efe96537bf67ab391d1936fa45fa1b0264a7596f6a0bc8a9317c65c}"
+        "title": "note_title",
+        "body": "flag_value"
     }
 }
 ```
@@ -116,7 +143,7 @@ server {
     error_page 404 /index.php;
 
     location ~ \.php$ {
-        fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+        fastcgi_pass unix:/var/run/php/php7.4-fpm.sock; #check your php version
         fastcgi_index index.php;
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
         include fastcgi_params;
