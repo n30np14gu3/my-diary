@@ -29,7 +29,7 @@ apt-get install php7.4 php7.4-curl php7.4-bcmath php7.4-ctype php7.4-json php7.4
 ```
 
 **Настройте MySQL**
-Важно, чтобы авторизацияп ользователя была по ```mysql_native_password```
+Важно, чтобы авторизация пользователя была по ```mysql_native_password```
 ```mysql
 -- UPDATE FOR ROOT USER
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
