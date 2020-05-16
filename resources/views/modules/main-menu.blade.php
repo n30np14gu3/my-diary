@@ -9,7 +9,7 @@
             <a class="@yield('settings-active') item" href="{{url('/settings')}}">Settings</a>
         @endif
         <a class="@yield('faq-active') item" href="{{url('/faq')}}">F.A.Q</a>
-        <a class="@yield('support-active') item" onclick="showPopup('info', 'Support is temporary unavailable')">Support</a>
+        <a class="@yield('support-active') item" href="{{url('/support')}}">Support</a>
         <div class="right item">
             @if(@$logged)
                 <a class="ui @yield('inverted') red button" href="{{url('/logout')}}">Logout</a>

@@ -18,6 +18,11 @@ Route::get('', ['uses' => 'Index@index']);
 Route::get('faq', ['uses' => 'Index@faq']);
 Route::get('logout', ['uses' => 'Auth@logout']);
 
+Route::group(['prefix' => 'support'], function(){
+    Route::get('', ['uses' => 'SupportController@index']);
+    Route::post('submit', ['uses' => 'SupportController@submit']);
+});
+
 Route::group(['middleware' => 'diary_auth'], function (){
     Route::get('diary', ['uses' => 'DiaryController@index']);
     Route::get('settings', ['uses' => 'AccountController@index']);

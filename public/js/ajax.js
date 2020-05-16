@@ -84,3 +84,21 @@ $('#change_password_form').submit(function (e) {
         }
     });
 });
+
+$('#support-form').submit(function (e) {
+    e.preventDefault();
+    $.ajax({
+       url: '/support/submit',
+       method: 'POST',
+       data: $('#support-form').serialize(),
+       success: function (data) {
+           if(data.status !== 'OK'){
+               showPopup('error', data.message);
+           }
+           else{
+               showPopup('success', 'Message successfully sended!');
+               $('#support-form')[0].reset();
+           }
+       }
+    });
+});
