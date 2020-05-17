@@ -19,6 +19,6 @@ class SupportController extends Controller
         //TODO: implement send!
 
         $this->response['status'] = 'OK';
-        return response()->json($this->response);
+        return $this->response;
     }
 }

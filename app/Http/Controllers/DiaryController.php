@@ -50,7 +50,7 @@ class DiaryController extends Controller
         $note->body = @$request['body'];
         $note->save();
         $this->response['status'] = 'OK';
-        return response()->json($this->response);
+        return $this->response;
     }
 
     public function edit(Request $request){
@@ -65,7 +65,7 @@ class DiaryController extends Controller
 
         if($validator->fails()){
             $this->response['message'] = $validator->errors()->first();
-            return response()->json($this->response);
+            return $this->response;
         }
 
         $user = UserHelper::GetUser($request);
@@ -73,13 +73,13 @@ class DiaryController extends Controller
         $note = Note::query()->where('id', $request['note_id'])->where('user_id', $user->id)->get()->first();
         if(!$note){
             $this->response['message'] = 'Note not found!';
-            return response()->json();
+            return $this->response;
         }
         $note->title = @$request['title'];
         $note->body = @$request['body'];
         $note->save();
         $this->response['status'] = 'OK';
-        return response()->json($this->response);
+        return $this->response;
     }
 
     public function note(Request $request, $note_id){
@@ -139,7 +139,7 @@ class DiaryController extends Controller
 
         if($validator->fails()){
             $this->response['message'] = $validator->errors()->first();
-            return response()->json($this->response);
+            return $this->response;
         }
 
         $user = UserHelper::GetUser($request);
@@ -147,11 +147,11 @@ class DiaryController extends Controller
         $note = Note::query()->where('id', $request['note_id'])->where('user_id', $user->id)->get()->first();
         if(!$note){
             $this->response['message'] = 'Note not found!';
-            return response()->json($this->response);
+            return $this->response;
         }
         Note::destroy($note->id);
         $this->response['status'] = 'OK';
-        return response()->json($this->response);
+        return $this->response;
     }
 
 }

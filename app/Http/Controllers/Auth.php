@@ -54,15 +54,15 @@ class Auth extends Controller
         ]);
         if($validator->fails()){
             $this->response['message'] = $validator->errors()->first();
-            return response()->json($this->response);
+            return $this->response;
         }
 
         if(!UserHelper::CreateNewUser($request)){
             $this->response['message'] = 'Registration fault!';
-            return response()->json($this->response);
+            return $this->response;
         }
 
         $this->response['status'] = 'OK';
-        return response()->json($this->response);
+        return $this->response;
     }
 }

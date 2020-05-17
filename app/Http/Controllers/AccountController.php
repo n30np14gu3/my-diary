@@ -39,6 +39,6 @@ class AccountController extends Controller
         $user->save();
         $request->session()->put('password', $request['new-password']);
         $this->response['status'] = 'OK';
-        return  response()->json($this->response);
+        return  $this->response;
     }
 }
