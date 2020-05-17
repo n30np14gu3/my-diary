@@ -48,7 +48,7 @@
                 <div class="three wide column">
                     <h4 class="ui inverted header">About</h4>
                     <div class="ui inverted link list">
-                        <a href="#" class="item">Created by @shockbyte</a>
+                        <a href="https://t.me/shockbyte" class="item" target="_blank">Created by @shockbyte</a>
                     </div>
                 </div>
                 <div class="seven wide column">
