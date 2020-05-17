@@ -51,7 +51,7 @@ touch .env
 ```
 ```dotenv
 APP_NAME=diary
-APP_ENV=production
+APP_ENV=local
 APP_DEBUG=false
 APP_URL=http://localhost
 
