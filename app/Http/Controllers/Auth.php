@@ -15,16 +15,16 @@ class Auth extends Controller
         if($session){
             $session->close($request);
         }
+        $request->session()->flush();
         if (isset($_SERVER['HTTP_COOKIE'])) {
             $cookies = explode(';', $_SERVER['HTTP_COOKIE']);
             foreach($cookies as $cookie) {
                 $parts = explode('=', $cookie);
                 $name = trim($parts[0]);
-                setcookie($name, '', time()-1000);
-                setcookie($name, '', time()-1000, '/');
+                setcookie($name, '', time()-1000000);
+                setcookie($name, '', time()-10000000, '/');
             }
         }
-        $request->session()->flush();
         return redirect('/');
     }
 
