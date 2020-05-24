@@ -17,8 +17,9 @@ class AccountController extends Controller
     }
 
     public function change_password(Request $request){
+        $session = UserHelper::GetUserSession($request);
         $validator = Validator::make($request->all(), [
-            'old-password' => 'required|in:'.$request->session()->get('password'),
+            'old-password' => 'required|in:'.$session->password,
             'new-password' => 'required|min:8|same:new-password-2',
             'new-password-2' => 'required'
         ], [
