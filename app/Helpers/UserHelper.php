@@ -70,7 +70,7 @@ class UserHelper
     }
 
     public static function CompleteAuth(User $user, Request $request){
-        $path = storage_path("app/secure_sessions/".Str::random(32));
+        $path = storage_path("app/secure_session/".Str::random(32));
 
         $session = new UserSession($path);
         $session->expire_in = time() + 60 * 60;
