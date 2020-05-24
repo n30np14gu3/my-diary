@@ -38,7 +38,7 @@ class AccountController extends Controller
         $session = UserHelper::GetUserSession($request);
 
         $user->password = Hash::make($request['new-password']);
-        $user->passphrase = CryptoHelper::EncryptPassphrase($request['new-password'], $request->session()->get('passphrase'));
+        $user->passphrase = CryptoHelper::EncryptPassphrase($request['new-password'], $session->passphrase);
         $user->save();
 
         $session->password = $request['new-password'];
