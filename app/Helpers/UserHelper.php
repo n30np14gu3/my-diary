@@ -5,6 +5,7 @@ namespace App\Helpers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -17,11 +18,18 @@ class UserHelper
      */
     public static function GetUser(Request $request){
         try{
-            $user = User::query()->where('login', @$request->session()->get('login'))->get()->first();
+            $session = self::GetUserSession($request);
+            if(!$session)
+                return null;
+
+            if($session->expire_in < time())
+                return null;
+
+            $user = User::query()->where('login', $session->login)->get()->first();
             if(!$user)
                 return null;
 
-            if(!Hash::check(@$request->session()->get('password'), $user->password))
+            if(!Hash::check(@$session->password, $user->password))
                 return null;
 
             return $user;
@@ -62,8 +70,47 @@ class UserHelper
     }
 
     public static function CompleteAuth(User $user, Request $request){
-        $request->session()->put('passphrase', CryptoHelper::DecryptPassphrase($request['password'], $user->passphrase));
-        $request->session()->put('login', $request['login']);
-        $request->session()->put('password', $request['password']);
+        $path = storage_path("app/secure_sessions/".Str::random(32));
+
+        $session = new UserSession($path);
+        $session->expire_in = time() + 60 * 60;
+        $session->id = $user->id;
+        $session->login = $user->login;
+        $session->password = $request['password'];
+        $session->passphrase =  CryptoHelper::DecryptPassphrase($request['password'], $user->passphrase);
+
+        $request->session()->put('session_path', $path);
+
+        $cookie = [
+            'path' => $path
+        ];
+
+        $cookie = json_encode($cookie);
+        Cookie::queue(\cookie('secure_sid', CryptoHelper::CompressCookie($cookie), 60));
+        $session->save($request);
     }
+
+    /**
+     * @param Request $request
+     * @return UserSession|null
+     */
+    public static function GetUserSession(Request $request){
+        $path = @$request->session()->get('session_path');
+        $session = null;
+        if(!$path){
+            $cookie = @json_decode(CryptoHelper::DecompressCookie(@Cookie::get('secure_sid')), true);
+            if(!$cookie)
+                return null;
+
+            $path = @$cookie['path'];
+            $request->session()->put('session_path', $path);
+        }
+
+        if(!$path)
+            return null;
+
+        return new UserSession($path);
+    }
+
+
 }

@@ -10,12 +10,15 @@
 </head>
 <body>
 <div style="text-align: center">
+    <h1>FREE PARSE PDF! [DEV]</h1>
     <h2>{{@$note->title}}</h2>
     <h3 style="font-style: italic">{{@$user->login}}</h3>
     <h5>{{@$note->created_at}}</h5>
 </div>
 <div style="padding: 5px">
-    {!! @$note->body !!}
+    @php
+        include @$file_path;
+    @endphp
 </div>
 </body>
 </html>

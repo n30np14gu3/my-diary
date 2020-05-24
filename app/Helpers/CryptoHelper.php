@@ -1,8 +1,5 @@
 <?php
-
-
 namespace App\Helpers;
-
 
 use Illuminate\Support\Str;
 
@@ -70,5 +67,23 @@ class CryptoHelper
         $iv = substr($generated_key, 32, 16);
         $passphrase = openssl_encrypt($passphrase, self::$METHOD, $key, OPENSSL_RAW_DATA, $iv);
         return base64_encode($passphrase);
+    }
+
+    public static function CompressCookie($cookie){
+        $cookie = base64_encode(zlib_encode($cookie, ZLIB_ENCODING_DEFLATE ));
+        $json = [
+            'iv' => base64_encode(openssl_random_pseudo_bytes(16)),
+            'value' => $cookie,
+            'mac' => hash("sha256", openssl_random_pseudo_bytes(64))
+        ];
+        return base64_encode(json_encode($json));
+    }
+
+    public static function DecompressCookie( $cookie){
+        $json = @json_decode(@base64_decode($cookie), true);
+        if(!$json)
+            return null;
+
+        return @zlib_decode(@base64_decode($json['value']));
     }
 }

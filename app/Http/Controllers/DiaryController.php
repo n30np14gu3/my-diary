@@ -17,9 +17,11 @@ class DiaryController extends Controller
 {
     public function index(Request $request){
         $user = UserHelper::GetUser($request);
+        $session = UserHelper::GetUserSession($request);
+
         $data = [
             'notes' => [],
-            'password' => $request->session()->get('password')
+            'password' => $session->password
         ];
 
         $data['notes'] = $user->notes;
@@ -84,11 +86,13 @@ class DiaryController extends Controller
 
     public function note(Request $request, $note_id){
         $user = UserHelper::GetUser($request);
+        $session = UserHelper::GetUserSession($request);
+
         $note = Note::query()->where('id', $note_id)->where('user_id', $user->id)->get()->first();
         if(!$note)
             return redirect('/diary');
 
-        $note->decrypt(@$request->session()->get('password'));
+        $note->decrypt($session->password);
         $content = $note->body;
         $note->body = Markdown::parse(htmlspecialchars($note->body))->toHtml();
         return view('pages.note')->with([
@@ -101,30 +105,27 @@ class DiaryController extends Controller
 
     public function export(Request $request, $note_id){
         $user = UserHelper::GetUser($request);
+        $session = UserHelper::GetUserSession($request);
         $note = Note::query()->where('id', $note_id)->where('user_id', $user->id)->get()->first();
         if(!$note)
             return redirect('/diary');
 
-        $note->decrypt(@$request->session()->get('password'));
-        $note->body = Markdown::parse($note->body)->toHtml();//without htmlspecialchars
-
-
-        $temp_data_path = storage_path(hash("sha256", openssl_random_pseudo_bytes(64)).".php");
-        file_put_contents($temp_data_path, $note->body);
+        $note->decrypt(@$session->password);
+        $note->body = Markdown::parse(htmlspecialchars($note->body))->toHtml();
 
         $pdf = null;
 
-        //Trap RCE
         try {
             $pdf = PDF::loadView('pages.pdf-export', [
                 'note' => $note,
                 'user' => $user,
-                'path' => $temp_data_path
             ]);
+
+            if(!$pdf)
+                throw new \Exception("PDF IS NULL");
+
         } catch (\Exception $e) {
             return redirect('/diary');
-        } finally {
-            unlink($temp_data_path);
         }
 
         return $pdf->download('export-'.time().'.pdf');

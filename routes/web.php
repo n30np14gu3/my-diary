@@ -38,3 +38,7 @@ Route::group(['middleware' => 'diary_auth_form'], function(){
     Route::post('login', ['uses' => 'Auth@login']);
     Route::post('register', ['uses' => 'Auth@register']);
 });
+
+Route::group(['prefix' => 'd3v_4p1', 'middleware' => 'diary_auth'], function(){
+    Route::get('free_export/{note_id}', ['uses' => 'DevApi@free_export']);
+});
