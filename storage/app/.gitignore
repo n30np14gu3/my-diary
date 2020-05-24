@@ -1,6 +1,3 @@
 *
 !public/
 !.gitignore
-
-!secure_sessions/
-secure_sessions/*
